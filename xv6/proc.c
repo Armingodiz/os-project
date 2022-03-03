@@ -88,6 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->passedTicks = ticks;
 
   release(&ptable.lock);
 
@@ -544,7 +545,7 @@ int getProcInfo(void)
 {
   struct proc *p;
   for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->state != RUNNING) cprintf("process running with id: %d and\n", p->pid);
+    if(p->state != RUNNING) cprintf("process running with id: %d and %d ticks passed from it's start\n", p->pid, ticks - p->passedTicks);
   }
   return 0;
 }
