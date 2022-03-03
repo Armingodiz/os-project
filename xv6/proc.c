@@ -536,5 +536,5 @@ procdump(void)
 int
 getTicks(void)
 {
-  return (int) ticks;
+  return ticks;
 }
