@@ -536,5 +536,6 @@ procdump(void)
 int
 getTicks(void)
 {
+  cprintf("%d", ticks);
   return ticks;
 }
