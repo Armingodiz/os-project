@@ -93,5 +93,5 @@ sys_uptime(void)
 int
 sys_getticks(void)
 {
-  return get_ticks();
+  return getTicks();
 }
