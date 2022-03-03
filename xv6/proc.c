@@ -539,3 +539,12 @@ getTicks(void)
 {
   return ticks;
 }
+
+int getProcInfo(void)
+{
+  struct proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state != RUNNING) cprintf("process running with id: %d and\n", p->pid);
+  }
+  return 0;
+}
