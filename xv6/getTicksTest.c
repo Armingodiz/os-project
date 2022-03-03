@@ -3,7 +3,7 @@
 #include "user.h"
 
 int main(void){
-    getTicks();
-    //printf(1, "ticks: %d", ticks);
+    int ticks = getTicks();
+    printf(1, "ticks: %d\n", ticks);
     exit();
 }
