@@ -4,6 +4,6 @@
 
 int main(void){
     int ticks = get_ticks();
-    printf("ticks: %d",ticks);
+    printf(1, "ticks: %d", ticks);
     exit();
 }
