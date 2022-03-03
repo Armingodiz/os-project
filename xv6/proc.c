@@ -534,7 +534,7 @@ procdump(void)
 }
 
 int
-get_ticks(void)
+getTicks(void)
 {
   return (int) ticks;
 }
