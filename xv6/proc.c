@@ -532,3 +532,9 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+int
+get_ticks(void)
+{
+  return (int) ticks;
+}
