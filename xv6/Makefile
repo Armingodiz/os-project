@@ -182,7 +182,7 @@ UPROGS=\
 	_wc\
 	_zombie\
 	_getTicksTest\
-	_getProcInfoTest
+	_getProcInfoTest\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
