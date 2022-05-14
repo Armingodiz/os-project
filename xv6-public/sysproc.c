@@ -110,6 +110,7 @@ int sys_thread_create(void)
 int sys_thread_wait(void)
 {
   return thread_wait();
+}
 int sys_getTicks(void) {
   return getTicks();
 }
