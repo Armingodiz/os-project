@@ -20,9 +20,7 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
-#define SYS_getTicks 22
-#define SYS_getProcInfo 23 
 //new
-#define SYS_thread_create 24
-#define SYS_thread_wait 25
-#define SYS_thread_id 26
+#define SYS_thread_create 22
+#define SYS_thread_wait 23
+#define SYS_thread_id 24

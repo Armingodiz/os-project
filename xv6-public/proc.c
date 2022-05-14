@@ -96,8 +96,8 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   // NEW CODE
-
-  p->ptime = getTicks();
+  // assgin readCount to 0 because this is the time that process get allocated
+  p->readCount = 0;
 
   // NEW CODE
   // -1 means process have no threads at first
@@ -750,18 +750,4 @@ int thread_wait(void)
 
     sleep(curproc, &ptable.lock); // DOC: wait-sleep
   }
-}
-
-
-int getTicks(void){
-  return ticks;
-}
-
-int getProcInfo(void){
-  struct  proc *p;
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->state == RUNNING)
-      cprintf("pid: %d -> ptime: %d\n", p->pid, p->ptime);
-  }
-  return 0;
 }

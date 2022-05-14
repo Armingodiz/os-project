@@ -84,14 +84,6 @@ int sys_uptime(void)
   return xticks;
 }
 
-int sys_getTicks(void){
-  return getTicks();
-}
-
-int sys_getProcInfo(void){
-  return getProcInfo();
-}
-
 int sys_thread_id()
 { 
   return thread_id();
