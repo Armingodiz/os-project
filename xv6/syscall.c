@@ -99,8 +99,9 @@ extern int sys_unlink(void);
 extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
+extern int sys_getticks(void);
 
-//new
+//new phase2
 extern int sys_thread_create(void);
 extern int sys_thread_wait(void);
 extern int sys_thread_id(void);
@@ -127,6 +128,7 @@ static int (*syscalls[])(void) = {
     [SYS_link] sys_link,
     [SYS_mkdir] sys_mkdir,
     [SYS_close] sys_close,
+    [SYS_getticks] sys_getticks,
     [SYS_thread_create] sys_thread_create,
     [SYS_thread_wait] sys_thread_wait,
     [SYS_thread_id] sys_thread_id,

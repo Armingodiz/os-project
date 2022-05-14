@@ -621,6 +621,24 @@ void procdump(void)
   }
 }
 
+
+int
+getTicks(void)
+{
+  return ticks;
+}
+
+int getProcInfo(void)
+{
+  struct proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == RUNNING) cprintf("process running with id: %d and %d ticks passed from it's start\n", p->pid, ticks - p->passedTicks);
+  }
+  return 0;
+}
+
+// new phase 2
+
 int has_shared_pgdir(struct proc *proc)
 {
   // TODO
@@ -636,7 +654,8 @@ int has_shared_pgdir(struct proc *proc)
 }
 
 
-//new
+
+
 int thread_id() {
   struct proc* current = myproc();
   return current->pid;
