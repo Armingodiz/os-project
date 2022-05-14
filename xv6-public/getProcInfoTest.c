@@ -2,7 +2,7 @@
 #include "stat.h"
 #include "user.h"
 
-int main(void){
+int main() {
     getProcInfo();
     exit();
 }
