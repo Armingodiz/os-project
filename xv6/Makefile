@@ -258,7 +258,7 @@ EXTRA=\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 	getTicksTest.c\
-	getProcInfoTest.c
+	getProcInfoTest.c\
 	getHelloTest.c\
 	getProcCountTest.c\
 	getReadCountTest.c\
