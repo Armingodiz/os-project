@@ -122,6 +122,7 @@ void            wakeup(void*);
 void            yield(void);
 //new
 int             get_ticks(void);
+int             getProcInfo(void);
 int             thread_create(void *stack);
 int             thread_wait(void);
 int             thread_creator(void (*fn)(void *), void *args);

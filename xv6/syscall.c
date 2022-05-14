@@ -100,6 +100,7 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_getticks(void);
+extern int sys_getProcInfo(void);
 
 //new phase2
 extern int sys_thread_create(void);
@@ -129,6 +130,7 @@ static int (*syscalls[])(void) = {
     [SYS_mkdir] sys_mkdir,
     [SYS_close] sys_close,
     [SYS_getticks] sys_getticks,
+    [SYS_getProcInfo] sys_getProcInfo,
     [SYS_thread_create] sys_thread_create,
     [SYS_thread_wait] sys_thread_wait,
     [SYS_thread_id] sys_thread_id,

@@ -88,6 +88,10 @@ int sys_getticks(void){
   return get_ticks();
 }
 
+int sys_getProcInfo(void){
+  return getProcInfo();
+}
+
 int sys_thread_id()
 { 
   return thread_id();
