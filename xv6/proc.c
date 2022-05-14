@@ -96,8 +96,8 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
   // NEW CODE
-  // assgin readCount to 0 because this is the time that process get allocated
-  p->readCount = 0;
+
+  p->ptime = getTicks();
 
   // NEW CODE
   // -1 means process have no threads at first
@@ -621,24 +621,6 @@ void procdump(void)
   }
 }
 
-
-int
-get_ticks(void)
-{
-  return ticks;
-}
-
-int getProcInfo(void)
-{
-  struct proc *p;
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->state == RUNNING) cprintf("process running with id: %d and %d ticks passed from it's start\n", p->pid, ticks - p->passedTicks);
-  }
-  return 0;
-}
-
-// new phase 2
-
 int has_shared_pgdir(struct proc *proc)
 {
   // TODO
@@ -654,8 +636,7 @@ int has_shared_pgdir(struct proc *proc)
 }
 
 
-
-
+//new
 int thread_id() {
   struct proc* current = myproc();
   return current->pid;
@@ -769,4 +750,18 @@ int thread_wait(void)
 
     sleep(curproc, &ptable.lock); // DOC: wait-sleep
   }
+}
+
+
+int getTicks(void){
+  return ticks;
+}
+
+int getProcInfo(void){
+  struct  proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == RUNNING)
+      cprintf("pid: %d -> ptime: %d\n", p->pid, p->ptime);
+  }
+  return 0;
 }

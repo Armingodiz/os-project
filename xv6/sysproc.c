@@ -84,8 +84,8 @@ int sys_uptime(void)
   return xticks;
 }
 
-int sys_get_ticks(void){
-  return get_ticks();
+int sys_getTicks(void){
+  return getTicks();
 }
 
 int sys_getProcInfo(void){

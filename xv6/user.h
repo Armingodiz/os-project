@@ -23,7 +23,7 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int get_ticks(void);
+int getTicks(void);
 int getProcInfo(void);
 
 // ulib.c
