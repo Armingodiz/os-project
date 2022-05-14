@@ -8,40 +8,18 @@
 int stack[4096] __attribute__((aligned(4096)));
 int x = 0;
 
+int func(int x){
+    printf(1,"x isssss:%d\n",x);
+}
+
 int main(int argc, char *argv[])
 {
     printf(1, "stackkk %d\n", stack);
-    int tid = thread_create(stack);
+    int tid = thread_creator(func,1);
 
     if (tid < 0)
     {
         printf(1, "can not create thread!\n");
-    }
-    else if (tid == 0)
-    {
-        sleep(100);
-        printf(1, "========> im here\n");
-        for (;;)
-        {
-            x++;
-            printf(1, "x is %d\n", x);
-            sleep(100);
-            if(x>=10){
-                exit();
-            }
-        }
-    }
-    else
-    {
-        // for (;;)
-        // {
-        //     printf(1, "x is %d\n", x);
-        //     sleep(100);
-        // }
-
-        printf(1,"wait for child thread to reach x=10\n");
-        thread_wait();
-        printf(1,"after ending the child thread, x is %d\n", x);
     }
     exit();
 }
