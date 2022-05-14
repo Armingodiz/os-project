@@ -49,14 +49,11 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
-
-  // NEW CODE
-  int readCount;               //Holds a counter for the number of times that read systemcall  
+  int ptime;                   // start up time
                                //has been called by this process after booting kernel
   int threads;                 // number of threads that this process has. -1 means process has no child(as thread)!
 
   int topOfStack;
-
 };
 
 // Process memory is laid out contiguously, low addresses first:

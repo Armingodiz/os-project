@@ -2,9 +2,7 @@
 #include "stat.h"
 #include "user.h"
 
-int main(int argc, char *argv[])
-{
-    printf(1,"\033c");
-
+int main() {
+    getProcInfo();
     exit();
 }
