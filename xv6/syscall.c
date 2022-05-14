@@ -129,7 +129,7 @@ static int (*syscalls[])(void) = {
     [SYS_link] sys_link,
     [SYS_mkdir] sys_mkdir,
     [SYS_close] sys_close,
-    [SYS_getticks] sys_get_ticks,
+    [SYS_get_ticks] sys_get_ticks,
     [SYS_getProcInfo] sys_getProcInfo,
     [SYS_thread_create] sys_thread_create,
     [SYS_thread_wait] sys_thread_wait,
