@@ -120,8 +120,11 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
-int             getTicks(void);
-int             getProcInfo(void);
+//new
+int             thread_create(void *stack);
+int             thread_wait(void);
+int             thread_creator(void (*fn)(void *), void *args);
+int             thread_id();
 
 // swtch.S
 void            swtch(struct context**, struct context*);
