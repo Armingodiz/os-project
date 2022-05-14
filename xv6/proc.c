@@ -623,7 +623,7 @@ void procdump(void)
 
 
 int
-getTicks(void)
+get_ticks(void)
 {
   return ticks;
 }
