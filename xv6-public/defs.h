@@ -120,11 +120,11 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
+//new
 int             getTicks(void);
 int             getProcInfo(void);
-//new
 int             thread_create(void *stack);
-int             thread_wait(void);
+int             thread_join(int);
 int             thread_creator(void (*fn)(void *), void *args);
 int             thread_id();
 

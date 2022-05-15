@@ -181,10 +181,9 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
+	_problem\
 	_getTicksTest\
 	_getProcInfoTest\
-	_threadTest_1\
-	_cls\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -257,13 +256,9 @@ EXTRA=\
 	printf.c umalloc.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
+    problem.c\
 	getTicksTest.c\
 	getProcInfoTest.c\
-	getHelloTest.c\
-	getProcCountTest.c\
-	getReadCountTest.c\
-	threadTest_1.c\
-	cls.c\
 
 dist:
 	rm -rf dist

@@ -84,14 +84,6 @@ int sys_uptime(void)
   return xticks;
 }
 
-int sys_getTicks(void){
-  return getTicks();
-}
-
-int sys_getProcInfo(void){
-  return getProcInfo();
-}
-
 int sys_thread_id()
 { 
   return thread_id();
@@ -109,7 +101,19 @@ int sys_thread_create(void)
   return thread_create((void *) stack);
 }
 
-int sys_thread_wait(void)
+int sys_thread_join(void)
 {
-  return thread_wait();
+  int pid;
+
+  if (argint(0, &pid) < 0)
+    return -1;
+  return thread_join(pid);
+}
+
+int sys_getTicks(void){
+  return getTicks();
+}
+
+int sys_getProcInfo(void){
+  return getProcInfo();
 }

@@ -95,9 +95,10 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  // NEW CODE
-
   p->ptime = getTicks();
+  // NEW CODE
+  // assgin readCount to 0 because this is the time that process get allocated
+  p->readCount = 0;
 
   // NEW CODE
   // -1 means process have no threads at first
@@ -637,6 +638,20 @@ int has_shared_pgdir(struct proc *proc)
 
 
 //new
+
+int getTicks(void){
+  return ticks;
+}
+
+int getProcInfo(void){
+  struct proc *p;
+  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if(p->state == RUNNING)
+      cprintf("pid: %d --> ptime: %d\n", p->pid, p->ptime);
+  }
+  return 0;
+}
+
 int thread_id() {
   struct proc* current = myproc();
   return current->pid;
@@ -644,7 +659,7 @@ int thread_id() {
 
 int thread_create(void *stack)
 {
-  cprintf("hello 1\n");
+  //cprintf("hello 1\n");
   int pid;
 
   struct proc *curr_proc = myproc();
@@ -702,7 +717,7 @@ int thread_create(void *stack)
   return pid;
 }
 
-int thread_wait(void)
+int thread_join(int wait_pid)
 {
   struct proc *curproc = myproc();
   struct proc *p;
@@ -718,11 +733,12 @@ int thread_wait(void)
         continue;
       if (p->threads != -1) // if p->threads 'is greather than -1' means that child is 'process child' and we should NOT wait for him
         continue;
+      if(p->pid != wait_pid) // it is not the thread we are waiting one
+        continue;
       // if code reaches this line means curr_proc has 'thread child'
       havekids = 1;
       if (p->state == ZOMBIE)
       {
-
         if (!has_shared_pgdir(p))
         {
           freevm(p->pgdir);
@@ -750,18 +766,4 @@ int thread_wait(void)
 
     sleep(curproc, &ptable.lock); // DOC: wait-sleep
   }
-}
-
-
-int getTicks(void){
-  return ticks;
-}
-
-int getProcInfo(void){
-  struct  proc *p;
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->state == RUNNING)
-      cprintf("pid: %d -> ptime: %d\n", p->pid, p->ptime);
-  }
-  return 0;
 }

@@ -23,8 +23,6 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
-int getTicks(void);
-int getProcInfo(void);
 
 // ulib.c
 int stat(const char*, struct stat*);
@@ -43,6 +41,8 @@ int atoi(const char*);
 
 //new
 int thread_create(void *stack);
-int thread_wait(void);
+int thread_join(int);
 int thread_creator(void (*fn)(void *), void *args);
 int thread_id();
+int getTicks(void);
+int getProcInfo(void);

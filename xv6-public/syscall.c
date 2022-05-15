@@ -99,11 +99,12 @@ extern int sys_unlink(void);
 extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
+
+//new
 extern int sys_getTicks(void);
 extern int sys_getProcInfo(void);
-//new
 extern int sys_thread_create(void);
-extern int sys_thread_wait(void);
+extern int sys_thread_join(void);
 extern int sys_thread_id(void);
 
 static int (*syscalls[])(void) = {
@@ -131,6 +132,31 @@ static int (*syscalls[])(void) = {
     [SYS_getTicks] sys_getTicks,
     [SYS_getProcInfo] sys_getProcInfo,
     [SYS_thread_create] sys_thread_create,
-    [SYS_thread_wait] sys_thread_wait,
+    [SYS_thread_join] sys_thread_join,
     [SYS_thread_id] sys_thread_id,
 };
+
+void syscall(void)
+{
+  int num;
+  struct proc *curproc = myproc();
+
+  num = curproc->tf->eax;
+
+  //NEW CODE
+  // check that system call is SYS_read or not
+  if (num == SYS_read)
+  {
+    curproc->readCount += 1; //TODO: that is correct or not
+  }
+  if (num > 0 && num < NELEM(syscalls) && syscalls[num])
+  {
+    curproc->tf->eax = syscalls[num]();
+  }
+  else
+  {
+    cprintf("%d %s: unknown sys call %d\n",
+            curproc->pid, curproc->name, num);
+    curproc->tf->eax = -1;
+  }
+}
