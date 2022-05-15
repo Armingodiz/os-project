@@ -181,9 +181,6 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
-	_getHelloTest\
-	_getProcCountTest\
-	_getReadCountTest\
 	_threadTest_1\
 	_cls\
 

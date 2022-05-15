@@ -621,48 +621,6 @@ void procdump(void)
   }
 }
 
-// FOR TEST
-
-int getHelloWorld(void)
-{
-  cprintf("heeelooo man!");
-  return 0;
-}
-
-// NEW CODE
-int getProcCount(void)
-{
-
-  struct proc *p;
-  int num_of_proc = 0;
-
-  acquire(&ptable.lock);
-
-  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    if (p->state != UNUSED)
-      num_of_proc++;
-  release(&ptable.lock);
-
-  return num_of_proc;
-}
-
-int getReadCount(void)
-{
-  struct proc *p;
-
-  acquire(&ptable.lock);
-  int read_cnt = 0;
-  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-  {
-    // if(p->readCount> 0){
-    read_cnt += p->readCount;
-    cprintf("process id: %d --- process count: %d\n", p->pid, p->readCount);
-  }
-  release(&ptable.lock);
-
-  return read_cnt;
-}
-
 int has_shared_pgdir(struct proc *proc)
 {
   // TODO
@@ -675,6 +633,13 @@ int has_shared_pgdir(struct proc *proc)
     }
   }
   return 0;
+}
+
+
+//new
+int thread_id() {
+  struct proc* current = myproc();
+  return current->pid;
 }
 
 int thread_create(void *stack)

@@ -20,11 +20,7 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
-// FOR TEST
-#define SYS_getHelloWorld 22
-
-// NEW CODE
-#define SYS_getProcCount 23
-#define SYS_getReadCount 24
-#define SYS_thread_create 25
-#define SYS_thread_wait 26
+//new
+#define SYS_thread_create 22
+#define SYS_thread_wait 23
+#define SYS_thread_id 24

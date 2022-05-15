@@ -84,21 +84,9 @@ int sys_uptime(void)
   return xticks;
 }
 
-// FOR TEST
-int sys_getHelloWorld(void)
-{
-  return getHelloWorld();
-}
-
-// NEW CODE
-int sys_getProcCount(void)
-{
-  return getProcCount();
-}
-
-int sys_getReadCount(void)
-{
-  return getReadCount();
+int sys_thread_id()
+{ 
+  return thread_id();
 }
 
 int sys_thread_create(void)
