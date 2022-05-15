@@ -19,7 +19,6 @@ exec(char *path, char **argv)
   pde_t *pgdir, *oldpgdir;
   struct proc *curproc = myproc();
 
-
   begin_op();
 
   if((ip = namei(path)) == 0){
@@ -69,9 +68,6 @@ exec(char *path, char **argv)
   clearpteu(pgdir, (char*)(sz - 2*PGSIZE));
   sp = sz;
 
-  curproc->topOfStack = sp;
-
-
   // Push argument strings, prepare rest of stack in ustack.
   for(argc = 0; argv[argc]; argc++) {
     if(argc >= MAXARG)
@@ -103,6 +99,8 @@ exec(char *path, char **argv)
   curproc->sz = sz;
   curproc->tf->eip = elf.entry;  // main
   curproc->tf->esp = sp;
+  curproc->threads = 1;
+  curproc->stackTop = sp;
   switchuvm(curproc);
   freevm(oldpgdir);
   return 0;
