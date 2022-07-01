@@ -546,7 +546,7 @@ void scheduler(void)
 
         c->proc = 0;
 
-      } else if (schedulerPolicy == NPPS) { // TODO change this 
+      } else if (schedulerPolicy == PPS) { // TODO change this 
 
         struct proc * temp_p;
         int hasMaxPriority = 1;
@@ -999,9 +999,9 @@ void printPolicy()
   {
     cprintf("policy is round robin (RR)\n");
   }
-  else if (schedulerPolicy == NPPS)
+  else if (schedulerPolicy == PPS)
   {
-    cprintf("policy is non preemptive priority scheduling (NPPS)\n");
+    cprintf("policy is preemptive priority scheduling (PPS)\n");
   }
   else if (schedulerPolicy == PMLQ)
   {

@@ -17,10 +17,10 @@ extern int ncpu;
 // TODO change algorithms base on new project
 
 // Round robin (RR)
-// non preemptive priority scheduling (NPPS)
+// non preemptive priority scheduling (PPS)
 // preemptive multi level queue (PMLQ)
 // dynamic multi level queue (DMLQ)
-enum policies {RR, NPPS, PMLQ, DMLQ};
+enum policies {RR, PPS, PMLQ, DMLQ};
 enum policies schedulerPolicy ;
 int isTimerIRQEnable[NCPU];
 int currentQuantum;

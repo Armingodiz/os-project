@@ -187,6 +187,7 @@ UPROGS=\
 	_setSchedulerPolicy\
 	_setPriority\
 	_RR_test\
+	_PPS_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -265,6 +266,7 @@ EXTRA=\
 	setSchedulerPolicy.c\
 	setPriority.c\
 	RR_test.c\
+	PPS_test.c\
 
 dist:
 	rm -rf dist
