@@ -690,14 +690,20 @@ void scheduler(void)
       {
         while (1)
         {
+          uint found = 0;
           uint ticketNum = random() % NumOfTickets;
-          if (ticketNum == -1)
+          // cprintf("tickets[%d]==%d\n", ticketNum, tickets[ticketNum]);
+          if (tickets[ticketNum] == -1)
             continue;
           for (struct proc *temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++)
-            if (temp_p->pid == tickets[ticketNum] && temp_p->state != RUNNABLE)
-              continue;
-            else
+          {
+            if (temp_p->pid == tickets[ticketNum])
             {
+              // cprintf("found process %d\n", temp_p->pid);
+              if (temp_p->state != RUNNABLE)
+                break;
+              //cprintf("*********** run process %d\n", temp_p->pid);
+              found = 1;
               c->proc = temp_p;
               switchuvm(temp_p);
               temp_p->state = RUNNING;
@@ -708,6 +714,9 @@ void scheduler(void)
               c->proc = 0;
               break;
             }
+          }
+          if (found)
+            break;
         }
       }
 

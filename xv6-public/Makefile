@@ -181,15 +181,12 @@ UPROGS=\
 	_usertests\
 	_wc\
 	_zombie\
-	_problem\
-	_getTicksTest\
-	_getProcInfoTest\
 	_setSchedulerPolicy\
 	_setPriority\
+	_LP_test\
 	_RR_test\
 	_PPS_test\
 	_PMLQ_test\
-	#_LP_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -262,15 +259,12 @@ EXTRA=\
 	printf.c umalloc.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
-    problem.c\
-	getTicksTest.c\
-	getProcInfoTest.c\
-	setSchedulerPolicy.c\
+    setSchedulerPolicy.c\
 	setPriority.c\
+	LP_test.c\
 	RR_test.c\
 	PPS_test.c\
 	PMLQ_test.c\
-	#LP_test.c\
 
 dist:
 	rm -rf dist
