@@ -107,14 +107,14 @@ trap(struct trapframe *tf)
   // Force process to give up CPU on clock tick.
   // If interrupts were on while locks held, would need to check nlock.
   if(myproc() && myproc()->state == RUNNING && tf->trapno == T_IRQ0+IRQ_TIMER) {
-    if (schedulerPolicy == PPS) {
+    if (schedulerPolicy == PPS || schedulerPolicy == PMLQ) {
       yield();
     }
-    else if (schedulerPolicy == PMLQ) {
-      if ((ticks - offset) % currentQuantum == 0) {
-        yield();
-      }
-    } 
+    // else if (schedulerPolicy == PMLQ) {
+    //   if ((ticks - offset) % currentQuantum == 0) {
+    //     yield();
+    //   }
+    // } 
     else if (isTimerIRQEnable[cpuid()]){
       if (ticks % QUANTUM == 0)
         yield();

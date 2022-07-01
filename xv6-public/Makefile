@@ -188,6 +188,7 @@ UPROGS=\
 	_setPriority\
 	_RR_test\
 	_PPS_test\
+	_PMLQ_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -267,6 +268,7 @@ EXTRA=\
 	setPriority.c\
 	RR_test.c\
 	PPS_test.c\
+	PMLQ_test.c\
 
 dist:
 	rm -rf dist

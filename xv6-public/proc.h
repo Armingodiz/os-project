@@ -80,6 +80,8 @@ struct proc {
   uint readyTime;
   uint terminationTime;
 
+  uint timeQ;
+
 };
 
 // Process memory is laid out contiguously, low addresses first:

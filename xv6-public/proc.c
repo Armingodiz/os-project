@@ -119,6 +119,7 @@ found:
   p->runningTime = 0;
   p->sleepingTime = 0;
   p->terminationTime = 0;
+  p->timeQ = 0;
 
   release(&ptable.lock);
 
@@ -597,18 +598,38 @@ void scheduler(void)
 
         struct proc * temp_p;
         int hasMaxPriority = 1;
+        int samePriorityNum = 0;
         for (temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++) {
           
           if (temp_p->state == RUNNABLE && temp_p->priority < p->priority) {
             hasMaxPriority = 0;
             break;
           }
+          if (temp_p->state == RUNNABLE && temp_p->priority == p->priority) {
+            samePriorityNum++;
+          }
+          
           
         }
-
         if (!hasMaxPriority)
           continue;
-
+        if (samePriorityNum > 1){
+          struct proc* runningProc;
+          for (temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++)
+            if (temp_p->state == RUNNING){
+              runningProc = temp_p;
+              break;
+            }
+          if (runningProc->timeQ == 0) {
+            for (temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++) {
+              if (temp_p->priority == runningProc->priority && temp_p->pid != runningProc) {
+                temp_p = (7 - p->priority) * QUANTUM;
+                p = temp_p;
+                break;
+              }
+            }
+          } 
+        }
         acquire(&currentQuantum_lock);
         currentQuantum = (7 - p->priority) * QUANTUM;
         release(&currentQuantum_lock);
@@ -619,6 +640,9 @@ void scheduler(void)
         if (p->startingTime == 0){
           // means not started yet
           p->startingTime = ticks;
+          p->timeQ = currentQuantum;
+        } else if (p->timeQ == 0) {
+          p->timeQ = currentQuantum;
         }
 
         c->proc = p;
@@ -626,6 +650,7 @@ void scheduler(void)
         p->state = RUNNING;
 
         swtch(&(c->scheduler), p->context);
+        p->timeQ--;
         switchkvm();
 
         c->proc = 0;
