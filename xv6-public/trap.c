@@ -102,11 +102,23 @@ trap(struct trapframe *tf)
   if(myproc() && myproc()->killed && (tf->cs&3) == DPL_USER)
     exit();
 
+
+  // TODO change here for premetive version of second algorithm
   // Force process to give up CPU on clock tick.
   // If interrupts were on while locks held, would need to check nlock.
-  if(myproc() && myproc()->state == RUNNING &&
-     tf->trapno == T_IRQ0+IRQ_TIMER)
-    yield();
+  if(myproc() && myproc()->state == RUNNING && tf->trapno == T_IRQ0+IRQ_TIMER) {
+    if (schedulerPolicy == PMLQ) {
+      if ((ticks - offset) % currentQuantum == 0) {
+        yield();
+      }
+    } 
+    else if (isTimerIRQEnable[cpuid()]){
+      if (ticks % QUANTUM == 0)
+        yield();
+    }
+  }
+
+
 
   // Check if the process has been killed since we yielded
   if(myproc() && myproc()->killed && (tf->cs&3) == DPL_USER)

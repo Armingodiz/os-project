@@ -117,3 +117,48 @@ int sys_getTicks(void){
 int sys_getProcInfo(void){
   return getProcInfo();
 }
+
+int sys_setPriority(void)
+{
+  int priority;
+  if(argint(0, &priority) < 0)
+    return -1;
+
+  return setPriority(priority);
+}
+
+int sys_setSchedulerPolicy(void)
+{
+  int policy;
+  if (argint(0, &policy) < 0)
+  {
+    return -1;
+  }
+  return setSchedulerPolicy((void *)policy);
+}
+
+
+int sys_printProcessTime(void)
+{
+  printProcessTime();
+  return 0;
+}
+
+
+int sys_doSomeDummyWork(void)
+{
+  int lineNum;
+  if(argint(0,&lineNum) < 0){
+    return -1;
+  }
+	doSomeDummyWork(lineNum);
+	return 0;
+}
+
+
+
+int sys_waitWithPData(void)	{
+  struct pData *data;
+  argptr(0, (void *)&data, sizeof(*data));
+  return waitWithPData((void *)data);
+}

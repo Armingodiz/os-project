@@ -106,6 +106,12 @@ extern int sys_getProcInfo(void);
 extern int sys_thread_create(void);
 extern int sys_thread_join(void);
 extern int sys_thread_id(void);
+// PHASE 3
+extern int sys_setSchedulerPolicy(void);
+extern int sys_setPriority(void);
+extern int sys_printProcessTime(void);
+extern int sys_doSomeDummyWork(void);
+extern int sys_waitWithPData(void);
 
 static int (*syscalls[])(void) = {
     [SYS_fork] sys_fork,
@@ -134,6 +140,11 @@ static int (*syscalls[])(void) = {
     [SYS_thread_create] sys_thread_create,
     [SYS_thread_join] sys_thread_join,
     [SYS_thread_id] sys_thread_id,
+    [SYS_setSchedulerPolicy] sys_setSchedulerPolicy,
+    [SYS_setPriority] sys_setPriority,
+    [SYS_printProcessTime] sys_printProcessTime,
+    [SYS_doSomeDummyWork] sys_doSomeDummyWork,
+    [SYS_waitWithPData] sys_waitWithPData,
 };
 
 void syscall(void)
@@ -160,3 +171,4 @@ void syscall(void)
     curproc->tf->eax = -1;
   }
 }
+

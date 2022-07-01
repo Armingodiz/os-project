@@ -8,10 +8,23 @@ struct cpu {
   int ncli;                    // Depth of pushcli nesting.
   int intena;                  // Were interrupts enabled before pushcli?
   struct proc *proc;           // The process running on this cpu or null
+  uint policy;
 };
 
 extern struct cpu cpus[NCPU];
 extern int ncpu;
+
+// TODO change algorithms base on new project
+
+// Round robin (RR)
+// non preemptive priority scheduling (NPPS)
+// preemptive multi level queue (PMLQ)
+// dynamic multi level queue (DMLQ)
+enum policies {RR, NPPS, PMLQ, DMLQ};
+enum policies schedulerPolicy ;
+int isTimerIRQEnable[NCPU];
+int currentQuantum;
+int offset;
 
 //PAGEBREAK: 17
 // Saved registers for kernel context switches.
@@ -57,6 +70,15 @@ struct proc {
 
   int topOfStack;
   int ptime;
+
+  // PHASE 3
+  uint priority;
+  uint creationTime;
+  uint startingTime;
+  uint sleepingTime;
+  uint runningTime;
+  uint readyTime;
+  uint terminationTime;
 
 };
 

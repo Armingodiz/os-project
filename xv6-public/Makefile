@@ -184,6 +184,8 @@ UPROGS=\
 	_problem\
 	_getTicksTest\
 	_getProcInfoTest\
+	_setSchedulerPolicy\
+	_setPriority\
 	_RR_test\
 
 fs.img: mkfs README $(UPROGS)
@@ -260,6 +262,8 @@ EXTRA=\
     problem.c\
 	getTicksTest.c\
 	getProcInfoTest.c\
+	setSchedulerPolicy.c\
+	setPriority.c\
 	RR_test.c\
 
 dist:
