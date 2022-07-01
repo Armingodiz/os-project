@@ -19,8 +19,8 @@ extern int ncpu;
 // Round robin (RR)
 // non preemptive priority scheduling (PPS)
 // preemptive multi level queue (PMLQ)
-// dynamic multi level queue (DMLQ)
-enum policies {RR, PPS, PMLQ, DMLQ};
+// lottery
+enum policies {RR, PPS, PMLQ, LP};
 enum policies schedulerPolicy ;
 int isTimerIRQEnable[NCPU];
 int currentQuantum;

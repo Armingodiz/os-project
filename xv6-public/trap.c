@@ -119,6 +119,8 @@ trap(struct trapframe *tf)
       if (ticks % QUANTUM == 0)
         yield();
     }
+    else
+      yield();
   }
 
 

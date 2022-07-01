@@ -8,6 +8,7 @@
 #include "spinlock.h"
 
 // #define PS 4096 // page size
+#define NumOfTickets 64
 
 struct
 {
@@ -29,12 +30,18 @@ extern void trapret(void);
 
 static void wakeup1(void *chan);
 
+// phase 3
+int tickets[64];
+
 void pinit(void)
 {
   initlock(&ptable.lock, "ptable");
   initlock(&thread_lock, "thlock");
   initlock(&printProcessTime_lock, "proccessTimeLock");
   initlock(&currentQuantum_lock, "currentQuantumLock");
+  // tickets = malloc(NumOfTickets * sizeof(int));
+  for (int i = 0; i < NumOfTickets; i++)
+    tickets[i] = -1;
 }
 
 // Must be called with interrupts disabled
@@ -110,7 +117,7 @@ found:
   // -1 means process have no threads at first
   p->threads = -1;
   p->topOfStack = -1;
-  
+
   // PHASE 3
   p->priority = 3;
   p->creationTime = ticks;
@@ -119,7 +126,13 @@ found:
   p->runningTime = 0;
   p->sleepingTime = 0;
   p->terminationTime = 0;
-  p->timeQ = 0;
+  p->timeQ = 7 - 3;
+  for (int i = 0; i < NumOfTickets; i++)
+    if (tickets[i] == -1)
+    {
+      tickets[i] = p->pid;
+      break;
+    }
 
   release(&ptable.lock);
 
@@ -388,6 +401,12 @@ int wait(void)
       havekids = 1;
       if (p->state == ZOMBIE)
       {
+        // phase 3
+        for (int i = 0; i < NumOfTickets; i++)
+        {
+          if (tickets[i] == p->pid)
+            tickets[i] = -1;
+        }
         // Found one.
         pid = p->pid;
         kfree(p->kstack);
@@ -400,7 +419,7 @@ int wait(void)
         p->state = UNUSED;
         p->threads = -1;
         p->topOfStack = -1;
-         // PHASE 3:
+        // PHASE 3:
         p->readyTime = 0;
         p->runningTime = 0;
         p->creationTime = 0;
@@ -463,7 +482,7 @@ int waitWithPData(void *pdata)
         data->readyTime = p->readyTime;
         data->pid = p->pid;
         data->priority = p->priority;
-        
+
         pid = p->pid;
         kfree(p->kstack);
         p->kstack = 0;
@@ -501,6 +520,23 @@ int waitWithPData(void *pdata)
   }
 }
 
+uint random(void)
+{
+  // Take from http://stackoverflow.com/questions/1167253/implementation-of-rand
+  static unsigned int z1 = 12345, z2 = 12345, z3 = 12345, z4 = 12345;
+  unsigned int b;
+  b = ((z1 << 6) ^ z1) >> 13;
+  z1 = ((z1 & 4294967294U) << 18) ^ b;
+  b = ((z2 << 2) ^ z2) >> 27;
+  z2 = ((z2 & 4294967288U) << 2) ^ b;
+  b = ((z3 << 13) ^ z3) >> 21;
+  z3 = ((z3 & 4294967280U) << 7) ^ b;
+  b = ((z4 << 3) ^ z4) >> 12;
+  z4 = ((z4 & 4294967168U) << 13) ^ b;
+
+  return (z1 ^ z2 ^ z3 ^ z4) / 2;
+}
+
 // PAGEBREAK: 42
 //  Per-CPU process scheduler.
 //  Each CPU calls scheduler() after setting itself up.
@@ -511,7 +547,7 @@ int waitWithPData(void *pdata)
 //       via swtch back to the scheduler.
 void scheduler(void)
 {
-  struct proc *p;
+  struct proc *p, *best_p;
   struct cpu *c = mycpu();
   c->proc = 0;
 
@@ -527,15 +563,17 @@ void scheduler(void)
     {
       if (p->state != RUNNABLE)
         continue;
+      best_p = p;
+      if (schedulerPolicy == RR)
+      {
 
-      if (schedulerPolicy == RR) {
-        
         // In RR Timer Interrupt should be enabled
         isTimerIRQEnable[cpuid()] = 1;
 
-        if (p->startingTime == 0){
-           // means not started yet
-            p->startingTime = ticks;
+        if (p->startingTime == 0)
+        {
+          // means not started yet
+          p->startingTime = ticks;
         }
 
         c->proc = p;
@@ -546,23 +584,26 @@ void scheduler(void)
         switchkvm();
 
         c->proc = 0;
+      }
+      else if (schedulerPolicy == PPS)
+      { // TODO change this
 
-      } else if (schedulerPolicy == PPS) { // TODO change this 
-
-        struct proc * temp_p;
+        struct proc *temp_p;
         int hasMaxPriority = 1;
         int samePriorityNum = 0;
-        for (temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++) {
-          
-          if (temp_p->state == RUNNABLE && temp_p->priority < p->priority) {
+        for (temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++)
+        {
+
+          if (temp_p->state == RUNNABLE && temp_p->priority < p->priority)
+          {
             hasMaxPriority = 0;
             break;
           }
 
-          if (temp_p->state == RUNNABLE && temp_p->priority == p->priority) {
+          if (temp_p->state == RUNNABLE && temp_p->priority == p->priority)
+          {
             samePriorityNum++;
           }
-          
         }
 
         if (!hasMaxPriority)
@@ -580,7 +621,8 @@ void scheduler(void)
 
         // cprintf("the priority of current process(pid= %d) is (%d) and (%d)\n", p->pid,p->priority, hasMaxPriority);
 
-        if (p->startingTime == 0){
+        if (p->startingTime == 0)
+        {
           // means not started yet
           p->startingTime = ticks;
         }
@@ -593,68 +635,80 @@ void scheduler(void)
         switchkvm();
 
         c->proc = 0;
-
-      } else if (schedulerPolicy == PMLQ) {
-
-        struct proc * temp_p;
-        int hasMaxPriority = 1;
-        int samePriorityNum = 0;
-        for (temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++) {
-          
-          if (temp_p->state == RUNNABLE && temp_p->priority < p->priority) {
-            hasMaxPriority = 0;
-            break;
-          }
-          if (temp_p->state == RUNNABLE && temp_p->priority == p->priority) {
-            samePriorityNum++;
-          }
-          
-          
+      }
+      else if (schedulerPolicy == PMLQ)
+      {
+        if (best_p->state != RUNNABLE) // there is no runnable process
+        {
+          return 0;
         }
-        if (!hasMaxPriority)
-          continue;
-        if (samePriorityNum > 1){
-          struct proc* runningProc;
-          for (temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++)
-            if (temp_p->state == RUNNING){
-              runningProc = temp_p;
+
+        for (struct proc *cp = ptable.proc; cp < &ptable.proc[NPROC]; cp++)
+        {
+          if (cp->state != RUNNABLE)
+            continue;
+          if (cp->priority < best_p->priority)
+          {
+            best_p = cp;
+          }
+          else if (cp->priority == best_p->priority)
+          {
+            if (best_p->timeQ == 0 && cp->timeQ > 0)
+            {
+              best_p = cp;
+            }
+          }
+        }
+
+        if (best_p->timeQ == 0) // reset all the remaining quantum of the processes in the best_p queue
+        {
+          for (struct proc *cp = ptable.proc; cp < &ptable.proc[NPROC]; cp++)
+          {
+            if (cp->state != RUNNABLE)
+              continue;
+            if (cp->priority == best_p->priority)
+            {
+              cp->timeQ = 7 - cp->priority;
+            }
+          }
+        }
+
+        best_p->timeQ = best_p->timeQ - 1;
+        c->proc = best_p;
+        switchuvm(best_p);
+        best_p->state = RUNNING;
+
+        swtch(&(c->scheduler), best_p->context);
+
+        switchkvm();
+
+        // Process is done running for now.
+        // It should have changed its p->state before coming back.
+        c->proc = 0;
+      }
+      else if (schedulerPolicy == LP)
+      {
+        while (1)
+        {
+          uint ticketNum = random() % NumOfTickets;
+          if (ticketNum == -1)
+            continue;
+          for (struct proc *temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++)
+            if (temp_p->pid == tickets[ticketNum] && temp_p->state != RUNNABLE)
+              continue;
+            else
+            {
+              c->proc = temp_p;
+              switchuvm(temp_p);
+              temp_p->state = RUNNING;
+
+              swtch(&(c->scheduler), temp_p->context);
+              switchkvm();
+
+              c->proc = 0;
               break;
             }
-          if (runningProc->timeQ == 0) {
-            for (temp_p = ptable.proc; temp_p < &ptable.proc[NPROC]; temp_p++) {
-              if (temp_p->priority == runningProc->priority && temp_p->pid != runningProc) {
-                temp_p = (7 - p->priority) * QUANTUM;
-                p = temp_p;
-                break;
-              }
-            }
-          } 
         }
-        acquire(&currentQuantum_lock);
-        currentQuantum = (7 - p->priority) * QUANTUM;
-        release(&currentQuantum_lock);
-        // cprintf("currentQuantum is %d\n", currentQuantum);
-
-        // cprintf("the priority of current process(pid= %d) is (%d) and (%d)\n", p->pid,p->priority, hasMaxPriority);
-
-        if (p->startingTime == 0){
-          // means not started yet
-          p->startingTime = ticks;
-          p->timeQ = currentQuantum;
-        } else if (p->timeQ == 0) {
-          p->timeQ = currentQuantum;
-        }
-
-        c->proc = p;
-        switchuvm(p);
-        p->state = RUNNING;
-
-        swtch(&(c->scheduler), p->context);
-        p->timeQ--;
-        switchkvm();
-
-        c->proc = 0;
-
       }
 
       // Switch to chosen process.  It is the process's job
@@ -867,30 +921,33 @@ int has_shared_pgdir(struct proc *proc)
   return 0;
 }
 
+// new
 
-//new
-
-int getTicks(void){
+int getTicks(void)
+{
   return ticks;
 }
 
-int getProcInfo(void){
+int getProcInfo(void)
+{
   struct proc *p;
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-    if(p->state == RUNNING)
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->state == RUNNING)
       cprintf("pid: %d --> ptime: %d\n", p->pid, p->ptime);
   }
   return 0;
 }
 
-int thread_id() {
-  struct proc* current = myproc();
+int thread_id()
+{
+  struct proc *current = myproc();
   return current->pid;
 }
 
 int thread_create(void *stack)
 {
-  //cprintf("hello 1\n");
+  // cprintf("hello 1\n");
   int pid;
 
   struct proc *curr_proc = myproc();
@@ -964,7 +1021,7 @@ int thread_join(int wait_pid)
         continue;
       if (p->threads != -1) // if p->threads 'is greather than -1' means that child is 'process child' and we should NOT wait for him
         continue;
-      if(p->pid != wait_pid) // it is not the thread we are waiting one
+      if (p->pid != wait_pid) // it is not the thread we are waiting one
         continue;
       // if code reaches this line means curr_proc has 'thread child'
       havekids = 1;
@@ -1001,14 +1058,14 @@ int thread_join(int wait_pid)
 
 // PHASE 3
 
-int setPriority(int priority) 
+int setPriority(int priority)
 {
   int current_priority = priority;
-  struct proc * current_p = myproc();
+  struct proc *current_p = myproc();
 
   if (priority < 1 || priority > 6)
     current_priority = 5;
-  
+
   acquire(&ptable.lock);
 
   current_p->priority = current_priority;
@@ -1032,9 +1089,9 @@ void printPolicy()
   {
     cprintf("policy is preemptive multi level queue (PMLQ)\n");
   }
-  else if (schedulerPolicy == DMLQ)
+  else if (schedulerPolicy == LP)
   {
-    cprintf("policy is dynamic multi level queue (DMLQ)\n");
+    cprintf("policy is lottery (LP)\n");
   }
 }
 
@@ -1086,11 +1143,11 @@ void updateProccessTime()
 void doSomeDummyWork(int lineNum)
 {
   struct proc *curproc = myproc();
-  
+
   acquire(&printProcessTime_lock);
   cprintf("/PID = %d/ : /priority = %d/ : /state = %d/\n", curproc->pid, curproc->priority, curproc->state);
   release(&printProcessTime_lock);
-  
+
   int pid = curproc->pid;
   int priority = curproc->priority;
   int i;

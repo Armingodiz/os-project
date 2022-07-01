@@ -189,6 +189,7 @@ UPROGS=\
 	_RR_test\
 	_PPS_test\
 	_PMLQ_test\
+	#_LP_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -269,6 +270,7 @@ EXTRA=\
 	RR_test.c\
 	PPS_test.c\
 	PMLQ_test.c\
+	#LP_test.c\
 
 dist:
 	rm -rf dist
