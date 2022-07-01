@@ -184,6 +184,7 @@ UPROGS=\
 	_problem\
 	_getTicksTest\
 	_getProcInfoTest\
+	_RR_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -259,6 +260,7 @@ EXTRA=\
     problem.c\
 	getTicksTest.c\
 	getProcInfoTest.c\
+	RR_test.c\
 
 dist:
 	rm -rf dist

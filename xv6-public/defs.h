@@ -127,6 +127,27 @@ int             thread_create(void *stack);
 int             thread_join(int);
 int             thread_creator(void (*fn)(void *), void *args);
 int             thread_id();
+// PHASE 3
+int             setSchedulerPolicy(void *policy);
+int             setPriority(int priority);
+void            updateProccessTime();
+void            printProcessTime();
+void            doSomeDummyWork(int lineNum);
+
+// process data
+struct pData {
+   int pid;
+   uint creationTime;
+   uint startingTime;
+   uint terminationTime;
+   uint readyTime;
+   uint runningTime;
+   uint sleepingTime;
+   uint priority;
+};
+
+// int waitWithPData(struct pData *pdata);
+int waitWithPData(void *pdata);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

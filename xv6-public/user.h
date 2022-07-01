@@ -46,3 +46,10 @@ int thread_creator(void (*fn)(void *), void *args);
 int thread_id();
 int getTicks(void);
 int getProcInfo(void);
+// PHASE 3
+int setSchedulerPolicy(void *policy);
+int setPriority(int priority);
+int setSchedulerPolicy(void *policy);
+void printProcessTime(void);
+void doSomeDummyWork(int lineNum);
+int waitWithPData(void *pdata);
