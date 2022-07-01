@@ -100,12 +100,23 @@ extern int sys_wait(void);
 extern int sys_write(void);
 extern int sys_uptime(void);
 
-//new
-extern int sys_getTicks(void);
-extern int sys_getProcInfo(void);
+//FOR TEST
+extern int sys_getHelloWorld(void);
+
+// NEW CODE
+extern int sys_getProcCount(void);
+extern int sys_getReadCount(void);
+
+
 extern int sys_thread_create(void);
-extern int sys_thread_join(void);
-extern int sys_thread_id(void);
+extern int sys_thread_wait(void);
+
+// PHASE 3
+extern int sys_setSchedulerPolicy(void);
+extern int sys_setPriority(void);
+extern int sys_printProcessTime(void);
+extern int sys_doSomeDummyWork(void);
+extern int sys_waitWithPData(void);
 
 static int (*syscalls[])(void) = {
     [SYS_fork] sys_fork,
@@ -129,11 +140,16 @@ static int (*syscalls[])(void) = {
     [SYS_link] sys_link,
     [SYS_mkdir] sys_mkdir,
     [SYS_close] sys_close,
-    [SYS_getTicks] sys_getTicks,
-    [SYS_getProcInfo] sys_getProcInfo,
+    [SYS_getHelloWorld] sys_getHelloWorld,
+    [SYS_getProcCount] sys_getProcCount,
+    [SYS_getReadCount] sys_getReadCount,
     [SYS_thread_create] sys_thread_create,
-    [SYS_thread_join] sys_thread_join,
-    [SYS_thread_id] sys_thread_id,
+    [SYS_thread_wait] sys_thread_wait,
+    [SYS_setSchedulerPolicy] sys_setSchedulerPolicy,
+    [SYS_setPriority] sys_setPriority,
+    [SYS_printProcessTime] sys_printProcessTime,
+    [SYS_doSomeDummyWork] sys_doSomeDummyWork,
+    [SYS_waitWithPData] sys_waitWithPData,
 };
 
 void syscall(void)

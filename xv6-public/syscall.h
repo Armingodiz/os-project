@@ -20,9 +20,18 @@
 #define SYS_link   19
 #define SYS_mkdir  20
 #define SYS_close  21
-//new
-#define SYS_thread_create 22
-#define SYS_thread_join 23
-#define SYS_thread_id 24
-#define SYS_getTicks    25
-#define SYS_getProcInfo    26
+// FOR TEST
+#define SYS_getHelloWorld 22
+
+// NEW CODE
+#define SYS_getProcCount 23
+#define SYS_getReadCount 24
+#define SYS_thread_create 25
+#define SYS_thread_wait 26
+
+// PHASE 3
+#define SYS_setSchedulerPolicy 27
+#define SYS_setPriority 28
+#define SYS_printProcessTime 29
+#define SYS_doSomeDummyWork 30
+#define SYS_waitWithPData 31

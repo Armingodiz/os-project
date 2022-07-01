@@ -120,13 +120,36 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
-//new
-int             getTicks(void);
-int             getProcInfo(void);
+// FOR TEST
+int             getHelloWorld(void);
+// NEW CODE
+int             getReadCount(void);
+int             getProcCount(void);
 int             thread_create(void *stack);
-int             thread_join(int);
+int             thread_wait(void);
 int             thread_creator(void (*fn)(void *), void *args);
-int             thread_id();
+
+// PHASE 3
+int             setSchedulerPolicy(void *policy);
+int             setPriority(int priority);
+void            updateProccessTime();
+void            printProcessTime();
+void            doSomeDummyWork(int lineNum);
+
+// process data
+struct pData {
+   int pid;
+   uint creationTime;
+   uint startingTime;
+   uint terminationTime;
+   uint readyTime;
+   uint runningTime;
+   uint sleepingTime;
+   uint priority;
+};
+
+// int waitWithPData(struct pData *pdata);
+int waitWithPData(void *pdata);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

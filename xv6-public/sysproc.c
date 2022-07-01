@@ -84,9 +84,21 @@ int sys_uptime(void)
   return xticks;
 }
 
-int sys_thread_id()
-{ 
-  return thread_id();
+// FOR TEST
+int sys_getHelloWorld(void)
+{
+  return getHelloWorld();
+}
+
+// NEW CODE
+int sys_getProcCount(void)
+{
+  return getProcCount();
+}
+
+int sys_getReadCount(void)
+{
+  return getReadCount();
 }
 
 int sys_thread_create(void)
@@ -95,25 +107,57 @@ int sys_thread_create(void)
   // if (argptr(3, (void *)&stack, sizeof(void *)) < 0)
   //   return -1;
   // return thread_create(stack);
-  if(argint(0,&stack) < 0){
+  if (argint(0, &stack) < 0)
+  {
     return -1;
   }
-  return thread_create((void *) stack);
+  return thread_create((void *)stack);
 }
 
-int sys_thread_join(void)
+int sys_thread_wait(void)
 {
-  int pid;
+  return thread_wait();
+}
 
-  if (argint(0, &pid) < 0)
+int sys_setPriority(void)
+{
+  int priority;
+  if(argint(0, &priority) < 0)
     return -1;
-  return thread_join(pid);
+
+  return setPriority(priority);
 }
 
-int sys_getTicks(void){
-  return getTicks();
+// set the scheduling policy.
+int sys_setSchedulerPolicy(void)
+{
+  int policy;
+
+  if (argint(0, &policy) < 0)
+  {
+    return -1;
+  }
+  return setSchedulerPolicy((void *)policy);
+}
+int sys_printProcessTime(void)
+{
+  printProcessTime();
+  return 0;
+}
+int sys_doSomeDummyWork(void)
+{
+  int lineNum;
+  if(argint(0,&lineNum) < 0){
+    return -1;
+  }
+
+  doSomeDummyWork(lineNum);
+  return 0;
 }
 
-int sys_getProcInfo(void){
-  return getProcInfo();
+int sys_waitWithPData(void)
+{
+  struct pData *data;
+  argptr(0, (void *)&data, sizeof(*data));
+  return waitWithPData((void *)data);
 }

@@ -44,9 +44,23 @@ void uartinit(void)
 
   // Announce that we're here.
   // for(p="\n\nxv6 is loading...\n\n"; *p; p++)
-  for (p = "OS\n\
-            PHASE2\n\
-            PROJECT\n";
+  for (p = "\n\n"
+           "                 ,  ,\n"
+           "                 \\\\ \\\\        \n"
+           "                 ) \\\\ \\\\    _p_   \n"
+           "                 )^\\))\\))  /  *\\  \n"
+           "                  \\_|| || / /^`-' \n"
+           "         __       -\\ \\\\--/ /      \n"
+           "       <'  \\\\___/   ___. )'       \n"
+           "           `====\\ )___/\\\\         \n"
+           "                 //     `\"        \n"
+           "                \\\\    /  \\        \n"
+           "                 `\" +========+    \n"
+           "                    |BEST  OS|    \n"
+           "Loading             |YOU HAVE|    \n"
+           "XV6...              |(N)EVER |    \n"
+           "                    |SEEN... |    \n"
+           "\n\n";
        *p; p++)
 
     uartputc(*p);
